@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 
-url = "https://jklm.fun/SUDN"
+url = "https://jklm.fun/****"
 bot_name = "arto_bot"
 dictionnary = "dicoen.txt"
 
