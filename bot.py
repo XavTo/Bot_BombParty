@@ -1,11 +1,12 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+import random
 import time
 
-url = "https://jklm.fun/****"
+url = "https://jklm.fun/YDNQ"
 bot_name = "arto_bot"
-dictionnary = "dicoen.txt"
+dictionnary = "dicofr.txt"
+humain_like = True
 
 def get_all_word():
   dico = []
@@ -21,19 +22,19 @@ def get_all_word():
 def enter_game():
   driver=webdriver.Chrome()
   driver.get(url)
-  name = driver.find_elements_by_tag_name("input")
+  name = driver.find_element_by_xpath("//div[2]/div[3]/form/div[2]/input")
   time.sleep(1)
-  name[1].send_keys(bot_name + Keys.ENTER)
+  name.send_keys(bot_name + Keys.ENTER)
   time.sleep(1)
   driver.switch_to.frame(0)
   while (1):
-    check = driver.find_elements_by_tag_name("button")
-    if (check[1].is_displayed() == True):
+    check = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
+    if (check.is_displayed() == True):
       break
     time.sleep(0.5)
-  join = driver.find_elements_by_tag_name("button")
+  join = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
   time.sleep(0.3)
-  join[1].send_keys(Keys.ENTER)
+  join.send_keys(Keys.ENTER)
   return (driver)
 
 def wait_turn(driver, already_use):
@@ -43,9 +44,9 @@ def wait_turn(driver, already_use):
     time.sleep(0.3)
     if (driver.find_element_by_class_name("join").is_displayed() == True):
       time.sleep(0.3)
-      join = driver.find_elements_by_tag_name("button")
+      join = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
       time.sleep(1)
-      join[1].send_keys(Keys.ENTER)
+      join.send_keys(Keys.ENTER)
       time.sleep(0.3)
       already_use[:] = []
       wait_turn(driver, already_use)
@@ -58,11 +59,17 @@ def play_game(driver, dico):
     syll = driver.find_element_by_class_name("syllable")
     word = find_word_dic(syll.text, dico, already_use)
     already_use.append(word)
-    res = driver.find_elements_by_class_name("styled")
+    res = driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div[2]/form/input")
     time.sleep(0.3)
-    res[2].send_keys(word)
-    time.sleep(0.3)
-    res[2].send_keys(Keys.ENTER)
+    if (humain_like == True):
+      for letters in word:
+        res.send_keys(letters)
+        rand = random.uniform(0.02, 0.15)
+        time.sleep(rand)
+    else:
+      res.send_keys(word)
+    time.sleep(0.1)
+    res.send_keys(Keys.ENTER)
     time.sleep(0.3)
 
 def find_syll_in_word(syll, word):
