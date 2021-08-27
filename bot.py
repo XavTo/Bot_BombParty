@@ -3,9 +3,9 @@ from selenium.webdriver.common.keys import Keys
 import random
 import time
 
-url = "https://jklm.fun/YDNQ"
 bot_name = "arto_bot"
-dictionnary = "dicofr.txt"
+dictionnary = "dicopokefr.txt"
+url = "https://jklm.fun/****"
 humain_like = True
 
 def get_all_word():
@@ -44,33 +44,17 @@ def wait_turn(driver, already_use):
     time.sleep(0.3)
     if (driver.find_element_by_class_name("join").is_displayed() == True):
       time.sleep(0.3)
-      join = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
+      try:
+        join = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
+      except: continue
       time.sleep(1)
-      join.send_keys(Keys.ENTER)
+      try:
+        join.send_keys(Keys.ENTER)
+      except: continue
       time.sleep(0.3)
       already_use[:] = []
       wait_turn(driver, already_use)
       break
-
-def play_game(driver, dico):
-  already_use = []
-  while(1):
-    wait_turn(driver, already_use)
-    syll = driver.find_element_by_class_name("syllable")
-    word = find_word_dic(syll.text, dico, already_use)
-    already_use.append(word)
-    res = driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div[2]/form/input")
-    time.sleep(0.3)
-    if (humain_like == True):
-      for letters in word:
-        res.send_keys(letters)
-        rand = random.uniform(0.02, 0.15)
-        time.sleep(rand)
-    else:
-      res.send_keys(word)
-    time.sleep(0.1)
-    res.send_keys(Keys.ENTER)
-    time.sleep(0.3)
 
 def find_syll_in_word(syll, word):
   if (word.find(syll) != -1):
@@ -90,6 +74,32 @@ def find_word_dic(syll, dico, already_use):
       if (not_already_use(word, already_use) == True):
         break
   return (word)
+
+def play_game(driver, dico):
+  already_use = []
+  while(1):
+    wait_turn(driver, already_use)
+    syll = driver.find_element_by_class_name("syllable")
+    word = find_word_dic(syll.text, dico, already_use)
+    already_use.append(word)
+    res = driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div[2]/form/input")
+    time.sleep(0.3)
+    if (humain_like == True):
+      for letters in word:
+        try:
+          res.send_keys(letters)
+        except: continue
+        rand = random.uniform(0.02, 0.15)
+        time.sleep(rand)
+    else:
+      try:
+        res.send_keys(word)
+      except: continue
+    time.sleep(0.1)
+    try:
+      res.send_keys(Keys.ENTER)
+    except: continue
+    time.sleep(0.3)
 
 dico = get_all_word()
 driver = enter_game()
