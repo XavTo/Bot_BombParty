@@ -9,3 +9,5 @@ v1.1:
 -Put game link line 8 and then auto-join/auto-play
 
 -Humain like mode (set True or False line 9)
+
+v1.2 fix all crash
