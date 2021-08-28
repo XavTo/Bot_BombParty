@@ -10,4 +10,4 @@ v1.1:
 
 -Humain like mode (set True or False line 9)
 
-v1.2 fix all crash
+v1.3
