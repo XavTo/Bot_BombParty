@@ -3,10 +3,10 @@ from selenium.webdriver.common.keys import Keys
 import random
 import time
 
-bot_name = "arto_bot"
-dictionnary = "dicopokefr.txt"
+bot_name = "bot"
+dictionnary = "dicoen.txt"
 url = "https://jklm.fun/****"
-humain_like = True
+humain_like = False
 
 def get_all_word():
   dico = []
@@ -41,7 +41,7 @@ def wait_turn(driver, already_use):
   check = False
   while (check == False):
     check = driver.find_element_by_class_name("selfTurn").is_displayed()
-    time.sleep(0.3)
+    time.sleep(0.02)
     if (driver.find_element_by_class_name("join").is_displayed() == True):
       time.sleep(0.3)
       try:
@@ -83,23 +83,24 @@ def play_game(driver, dico):
     word = find_word_dic(syll.text, dico, already_use)
     already_use.append(word)
     res = driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div[2]/form/input")
-    time.sleep(0.3)
     if (humain_like == True):
+      time.sleep(0.3)
       for letters in word:
         try:
           res.send_keys(letters)
         except: continue
         rand = random.uniform(0.02, 0.15)
         time.sleep(rand)
+      time.sleep(0.1)
     else:
       try:
-        res.send_keys(word)
+          res.send_keys(word)
       except: continue
-    time.sleep(0.1)
     try:
       res.send_keys(Keys.ENTER)
     except: continue
-    time.sleep(0.3)
+    if (humain_like == True):
+      time.sleep(0.3)
 
 dico = get_all_word()
 driver = enter_game()
