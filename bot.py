@@ -2,31 +2,44 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import random
 import time
+import sys
 
-bot_name = "bot"
-dictionnary = "dicoen.txt"
-url = "https://jklm.fun/****"
-humain_like = False
+bot_name = "art"
+if (len(sys.argv) < 2):
+  print("Add room link in arguments")
+  exit()
+url = sys.argv[1]
+humain_like = True
 
-def get_all_word():
-  dico = []
-  fin = open(dictionnary)
+def get_all_word(driver, dico):
+  lang = driver.find_element_by_class_name("dictionary").text
+  if (lang == "Anglais" or lang == "English"):
+    dictionary = "dicoen.txt"
+  if (lang == "Français" or lang == "French"):
+    dictionary = "dicofr.txt"
+  if (lang == "Pokémon (Anglais)" or lang == "Pokémon (English)"):
+    dictionary = "dicopokeen.txt"
+  if (lang == "Pokémon"):
+    dictionary = "dicopokefr.txt"
+  fin = open(dictionary)
   rm_nl = fin.readline()
   while (len(rm_nl) > 1):
     clean_word = rm_nl[:-1]
     clean_word = clean_word.upper()
     dico.append(clean_word)
     rm_nl = fin.readline()
-  return (dico)
+  random.shuffle(dico)
 
-def enter_game():
+def enter_game(dico):
   driver=webdriver.Chrome()
   driver.get(url)
+  time.sleep(0.3)
   name = driver.find_element_by_xpath("//div[2]/div[3]/form/div[2]/input")
   time.sleep(1)
   name.send_keys(bot_name + Keys.ENTER)
   time.sleep(1)
   driver.switch_to.frame(0)
+  get_all_word(driver, dico)
   while (1):
     check = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
     if (check.is_displayed() == True):
@@ -41,7 +54,7 @@ def wait_turn(driver, already_use):
   check = False
   while (check == False):
     check = driver.find_element_by_class_name("selfTurn").is_displayed()
-    time.sleep(0.02)
+    time.sleep(0.005)
     if (driver.find_element_by_class_name("join").is_displayed() == True):
       time.sleep(0.3)
       try:
@@ -84,7 +97,8 @@ def play_game(driver, dico):
     already_use.append(word)
     res = driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div[2]/form/input")
     if (humain_like == True):
-      time.sleep(0.3)
+      rand = random.uniform(0.2, 1)
+      time.sleep(rand)
       for letters in word:
         try:
           res.send_keys(letters)
@@ -102,6 +116,6 @@ def play_game(driver, dico):
     if (humain_like == True):
       time.sleep(0.3)
 
-dico = get_all_word()
-driver = enter_game()
+dico = []
+driver = enter_game(dico)
 play_game(driver, dico)
