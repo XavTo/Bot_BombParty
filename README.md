@@ -1,10 +1,10 @@
 # Bot_BombParty
-Work for JKLM.FUN v1.3
+Work for JKLM.FUN v1.5
 
 -Change bot name line 6
 
--Change dictionnary line 7
+-Auto change dictionnary
 
--Put game link line 8 and then auto-join/auto-play
+-Put game link in arguments
 
 -Humain like mode (set True or False line 9)
