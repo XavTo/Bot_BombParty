@@ -1,9 +1,7 @@
 # Bot_BombParty
-Work for JKLM.FUN v1.5
+Work for JKLM.FUN
 
 -Change bot name line 6
-
--Auto change dictionnary
 
 -Put game link in arguments
 
