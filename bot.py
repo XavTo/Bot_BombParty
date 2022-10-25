@@ -15,7 +15,8 @@ url = sys.argv[1]
 humain_like = True
 
 def get_all_word(driver, dico):
-  lang = driver.find_element(By.CLASS_NAME, "dictionary").text
+  lang = driver.find_element(By.XPATH, "//div[2]/div[2]/div[2]/div[1]/div/span[1]").text
+  print(lang)
   if (lang == "Anglais" or lang == "English"):
     dictionary = "dicoen.txt"
   if (lang == "Français" or lang == "French"):
@@ -112,9 +113,11 @@ def play_game(driver, dico):
       time.sleep(0.1)
     else:
       try:
+          time.sleep(0.01)
           res.send_keys(word)
       except: continue
     try:
+      time.sleep(0.01)
       res.send_keys(Keys.ENTER)
     except: continue
     if (humain_like == True):
