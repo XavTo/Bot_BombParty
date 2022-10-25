@@ -1,10 +1,13 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import random
 import time
 import sys
 
-bot_name = "art"
+bot_name = "boto"
 if (len(sys.argv) < 2):
   print("Add room link in arguments")
   exit()
@@ -12,7 +15,7 @@ url = sys.argv[1]
 humain_like = True
 
 def get_all_word(driver, dico):
-  lang = driver.find_element_by_class_name("dictionary").text
+  lang = driver.find_element(By.CLASS_NAME, "dictionary").text
   if (lang == "Anglais" or lang == "English"):
     dictionary = "dicoen.txt"
   if (lang == "Français" or lang == "French"):
@@ -31,21 +34,22 @@ def get_all_word(driver, dico):
   random.shuffle(dico)
 
 def enter_game(dico):
-  driver=webdriver.Chrome()
+  s=Service(ChromeDriverManager().install())
+  driver = webdriver.Chrome(service=s)
   driver.get(url)
   time.sleep(0.3)
-  name = driver.find_element_by_xpath("//div[2]/div[3]/form/div[2]/input")
+  name = driver.find_element(By.XPATH, "//div[2]/div[3]/form/div[2]/input")
   time.sleep(1)
   name.send_keys(bot_name + Keys.ENTER)
   time.sleep(1)
   driver.switch_to.frame(0)
   get_all_word(driver, dico)
   while (1):
-    check = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
+    check = driver.find_element(By.XPATH, "//div[2]/div[3]/div[1]/div[1]/button")
     if (check.is_displayed() == True):
       break
     time.sleep(0.5)
-  join = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
+  join = driver.find_element(By.XPATH, "//div[2]/div[3]/div[1]/div[1]/button")
   time.sleep(0.3)
   join.send_keys(Keys.ENTER)
   return (driver)
@@ -53,12 +57,12 @@ def enter_game(dico):
 def wait_turn(driver, already_use):
   check = False
   while (check == False):
-    check = driver.find_element_by_class_name("selfTurn").is_displayed()
+    check = driver.find_element(By.CLASS_NAME, "selfTurn").is_displayed()
     time.sleep(0.005)
-    if (driver.find_element_by_class_name("join").is_displayed() == True):
+    if (driver.find_element(By.CLASS_NAME, "join").is_displayed() == True):
       time.sleep(0.3)
       try:
-        join = driver.find_element_by_xpath("//div[2]/div[3]/div[1]/div[1]/button")
+        join = driver.find_element(By.XPATH, "//div[2]/div[3]/div[1]/div[1]/button")
       except: continue
       time.sleep(1)
       try:
@@ -92,10 +96,10 @@ def play_game(driver, dico):
   already_use = []
   while(1):
     wait_turn(driver, already_use)
-    syll = driver.find_element_by_class_name("syllable")
+    syll = driver.find_element(By.CLASS_NAME, "syllable")
     word = find_word_dic(syll.text, dico, already_use)
     already_use.append(word)
-    res = driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div[2]/form/input")
+    res = driver.find_element(By.XPATH, "//div[2]/div[3]/div[2]/div[2]/form/input")
     if (humain_like == True):
       rand = random.uniform(0.2, 1)
       time.sleep(rand)
