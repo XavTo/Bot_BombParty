@@ -15,17 +15,28 @@ url = sys.argv[1]
 humain_like = True
 
 def get_all_word(driver, dico):
-  lang = driver.find_element(By.XPATH, "//div[2]/div[2]/div[2]/div[1]/div/span[1]").text
+  try:
+    lang = driver.find_element(By.XPATH, "//div[2]/div[2]/div[2]/div[1]/div/span[1]").text
+  except:
+    print("Can't find langage")
+    exit(1)
+  language={
+      "Anglais":"dicoen.txt",
+      "English":"dicoen.txt",
+      "Français":"dicofr.txt",
+      "French":"dicofr.txt",
+      "Spanish":"dicoes.txt",
+      "Espagnol":"dicoes.txt",
+      "Pokémon (Anglais)":"dicopokeen.txt",
+      "Pokémon (English)":"dicopokeen.txt",
+      "Pokémon":"dicopokefr.txt"
+  }
+  try:
+    fin = open(language[lang], encoding="utf8")
+  except:
+    print("Unsupported language")
+    exit(1)
   print(lang)
-  if (lang == "Anglais" or lang == "English"):
-    dictionary = "dicoen.txt"
-  if (lang == "Français" or lang == "French"):
-    dictionary = "dicofr.txt"
-  if (lang == "Pokémon (Anglais)" or lang == "Pokémon (English)"):
-    dictionary = "dicopokeen.txt"
-  if (lang == "Pokémon"):
-    dictionary = "dicopokefr.txt"
-  fin = open(dictionary)
   rm_nl = fin.readline()
   while (len(rm_nl) > 1):
     clean_word = rm_nl[:-1]
@@ -41,10 +52,11 @@ def enter_game(dico):
   time.sleep(0.3)
   name = driver.find_element(By.XPATH, "//div[2]/div[3]/form/div[2]/input")
   time.sleep(1)
+  name.send_keys(Keys.DELETE)
+  time.sleep(0.2)
   name.send_keys(bot_name + Keys.ENTER)
   time.sleep(1)
   driver.switch_to.frame(0)
-  get_all_word(driver, dico)
   while (1):
     check = driver.find_element(By.XPATH, "//div[2]/div[3]/div[1]/div[1]/button")
     if (check.is_displayed() == True):
@@ -53,6 +65,8 @@ def enter_game(dico):
   join = driver.find_element(By.XPATH, "//div[2]/div[3]/div[1]/div[1]/button")
   time.sleep(0.3)
   join.send_keys(Keys.ENTER)
+  time.sleep(0.3)
+  get_all_word(driver, dico)
   return (driver)
 
 def wait_turn(driver, already_use):
